@@ -27,55 +27,23 @@
                 </ul>
             </div>
             <div class="card-body">
+
                 <div class="activity-groups">
+
+                    @foreach ($prodi as $program_studi)
                     <div class="activity-awards">
                         <div class="award-boxs">
                             <img src="award-icon-0002.svg" alt="">
                         </div>
                         <div class="award-list-outs">
-                            <h4>RPS D3 Teknik Informatika</h4>
+                            <h4>RPS {{ $program_studi->prodi }}</h4>
                             <h5>Semester 1 - 6</h5>
                         </div>
                         <div class="award-time-list">
                             <a href="/reporting">Lihat Detail</a>
                         </div>
                     </div>
-                    <div class="activity-awards">
-                        <div class="award-boxs">
-                            <img src="award-icon-0002.svg" alt="">
-                        </div>
-                        <div class="award-list-outs">
-                            <h4>RPS D3 Teknik Elektronika</h4>
-                            <h5>Semester 1 - 6</h5>
-                        </div>
-                        <div class="award-time-list">
-                            <a href="/reporting">Lihat Detail</a>
-                        </div>
-                    </div>
-                    <div class="activity-awards">
-                        <div class="award-boxs">
-                            <img src="award-icon-0002.svg" alt="">
-                        </div>
-                        <div class="award-list-outs">
-                            <h4>D4 SIKC</h4>
-                            <h5>Semester 1 - 8</h5>
-                        </div>
-                        <div class="award-time-list">
-                            <a href="/reporting">Lihat Detail</a>
-                        </div>
-                    </div>
-                    <div class="activity-awards mb-0">
-                        <div class="award-boxs">
-                            <img src="award-icon-0002.svg" alt="">
-                        </div>
-                        <div class="award-list-outs">
-                            <h4>D3 Teknik Listrik</h4>
-                            <h5>Semester 1 - 6</h5>
-                        </div>
-                        <div class="award-time-list">
-                            <a href="/reporting">Lihat Detail</a>
-                        </div>
-                    </div>
+                    @endforeach
 
                 </div>
             </div>

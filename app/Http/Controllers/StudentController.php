@@ -6,6 +6,7 @@ use DB;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
+use App\Models\Prodi;
 
 class StudentController extends Controller
 {
@@ -148,7 +149,7 @@ class StudentController extends Controller
     /** student reporting */
     public function ReportingStudent()
     {
-        return view('student.student-reporting');
+        return view('student.student-reporting', ['prodi' => Prodi::all()]);
     }
 
     /** student monitoring */

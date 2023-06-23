@@ -13,6 +13,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\KaprodiController;
+use App\Models\Rps;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,10 +42,10 @@ Route::get('/', function () {
 // Mengarahkan ke halaman home/reporting setelah login berhasil
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', function () {
-        return redirect('home/reporting');
+        return redirect('student/reporting');
     });
-    Route::get('/home/reporting', function () {
-        return view('home');
+    Route::get('/student/reporting', function () {
+        return view('student/reporting/page');
     });
 });
 
