@@ -12,6 +12,7 @@ use App\Http\Controllers\Setting;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\KaprodiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +26,9 @@ use App\Http\Controllers\DepartmentController;
 */
 
 /** for side bar menu active */
-function set_active( $route ) {
-    if( is_array( $route ) ){
+function set_active($route)
+{
+    if (is_array($route)) {
         return in_array(Request::path(), $route) ? 'active' : '';
     }
     return Request::path() == $route ? 'active' : '';
@@ -36,17 +38,17 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::group(['middleware'=>'auth'],function()
-{
-    Route::get('home',function()
-    {
-        return view('home');
+// Mengarahkan ke halaman home/reporting setelah login berhasil
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/home', function () {
+        return redirect('home/reporting');
     });
-    Route::get('home',function()
-    {
+    Route::get('/home/reporting', function () {
         return view('home');
     });
 });
+
+
 
 Auth::routes();
 
@@ -61,12 +63,13 @@ Route::controller(LoginController::class)->group(function () {
 // ----------------------------- register -------------------------//
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'register')->name('register');
-    Route::post('/register','storeUser')->name('register');    
+    Route::post('/register', 'storeUser')->name('register');
 });
 
 // -------------------------- main dashboard ----------------------//
 Route::controller(HomeController::class)->group(function () {
     Route::get('/home', 'index')->middleware('auth')->name('home');
+    Route::get('/home/reporting', 'reporting')->middleware('auth')->name('home/reporting');
     Route::get('user/profile/page', 'userProfile')->middleware('auth')->name('user/profile/page');
     Route::get('teacher/dashboard', 'teacherDashboardIndex')->middleware('auth')->name('teacher/dashboard');
     Route::get('student/dashboard', 'studentDashboardIndex')->middleware('auth')->name('student/dashboard');
@@ -89,13 +92,11 @@ Route::controller(Setting::class)->group(function () {
 // ------------------------ student -------------------------------//
 Route::controller(StudentController::class)->group(function () {
     Route::get('student/list', 'student')->middleware('auth')->name('student/list'); // list student
-    Route::get('student/grid', 'studentGrid')->middleware('auth')->name('student/grid'); // grid student
     Route::get('student/add/page', 'studentAdd')->middleware('auth')->name('student/add/page'); // page student
     Route::post('student/add/save', 'studentSave')->name('student/add/save'); // save record student
-    Route::get('student/edit/{id}', 'studentEdit'); // view for edit
-    Route::post('student/update', 'studentUpdate')->name('student/update'); // update record student
+    Route::get('student/reporting/page', 'ReportingStudent')->name('student/reporting/page'); //reporting
+    Route::get('student/monitoring/page', 'MonitoringStudent')->name('student/monitoring/page'); //monitoring
     Route::post('student/delete', 'studentDelete')->name('student/delete'); // delete record student
-    Route::get('student/profile/{id}', 'studentProfile')->middleware('auth'); // profile student
 });
 
 // ------------------------ teacher -------------------------------//
@@ -108,8 +109,15 @@ Route::controller(TeacherController::class)->group(function () {
     Route::post('teacher/delete', 'teacherDelete')->name('teacher/delete'); // delete record teacher
 });
 
-// ----------------------- department -----------------------------//
+// ----------------------- kajur -----------------------------//
 Route::controller(DepartmentController::class)->group(function () {
     Route::get('department/add/page', 'indexDepartment')->middleware('auth')->name('department/add/page'); // page add department
     Route::get('department/edit/page', 'editDepartment')->middleware('auth')->name('department/edit/page'); // page add department
+});
+
+// ----------------------- kaprodi -----------------------------//
+Route::middleware('auth')->group(function () {
+    Route::get('kaprodi/add/page', [KaprodiController::class, 'indexKaprodi'])->name('kaprodi/add/page');
+    Route::get('kaprodi/dashboard/page', [KaprodiController::class, 'dashboardKaprodi'])->name('kaprodi/dashboard/page');
+    Route::get('kaprodi/edit/page', [KaprodiController::class, 'editKaprodi'])->name('kaprodi/edit/page');
 });

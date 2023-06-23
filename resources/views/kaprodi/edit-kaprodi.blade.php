@@ -7,10 +7,10 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col">
-                    <h3 class="page-title">Dashboard Pengajar</h3>
+                    <h3 class="page-title">Menampilkan RPS</h3>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Pengajar</li>
+                        <li class="breadcrumb-item"><a href="{{ route('kaprodi/edit/page') }}">Kaprodi</a></li>
+                        <li class="breadcrumb-item active">Menampilkan RPS</li>
                     </ul>
                 </div>
             </div>
@@ -27,7 +27,9 @@
 
                 <div class="activity-groups">
                     <div class="activity-awards">
-
+                        <div class="award-boxs">
+                            <img src="award-icon-02.svg" alt="">
+                        </div>
                         <div class="award-list-outs">
                             <h4><a href="#"><b> RPS Semester 4 </b></a></h4>
                             <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
@@ -39,11 +41,13 @@
                                 }
                             </style>
 
-                            <p style="color: green;">Setuju</p>
+                            <p style="color: green;">RPS berhasil ditampilkan</p>
                         </div>
                     </div>
                     <div class="activity-awards">
-
+                        <div class="award-boxs">
+                            <img src="award-icon-02.svg" alt="">
+                        </div>
                         <div class="award-list-outs">
                             <h4><a href="#"><b>RPS Semester 2 </b></a></h4>
                             <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
@@ -55,11 +59,13 @@
                                 }
                             </style>
 
-                            <p style="color: green;">Setuju</p>
+                            <p style="color: green;">RPS berhasil ditampilkan</p>
                         </div>
                     </div>
                     <div class="activity-awards">
-
+                        <div class="award-boxs">
+                            <img src="award-icon-02.svg" alt="">
+                        </div>
                         <div class="award-list-outs">
                             <h4><a href="#"><b>RPS Semester 1 </b></a></h4>
                             <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
@@ -69,20 +75,15 @@
                                 .award-time-list a {
                                     margin-right: 40px;
                                 }
-
-                                .tombol {
-                                    margin-left: 40px;
-                                }
                             </style>
 
-                            <p style="color: red;">Belum di setujui</p>
-                            <div class="tombol">
-                                <button type="submit" class="btn btn-danger">Hapus</button>
-                            </div>
+                            <p style="color: red;">RPS berhasil ditampilkan</p>
                         </div>
                     </div>
                     <div class="activity-awards mb-0">
-
+                        <div class="award-boxs">
+                            <img src="award-icon-02.svg" alt="">
+                        </div>
                         <div class="award-list-outs">
                             <h4><a href="#"><b>RPS Semester 5</b></a></h4>
                             <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
@@ -92,36 +93,13 @@
                                 .award-time-list a {
                                     margin-right: 40px;
                                 }
-
-                                .tombol {
-                                    margin-left: 40px;
-                                }
                             </style>
-
-                            <p style="color: red;">belum di setujui</p>
-                            <div class="tombol">
-                                <button type="submit" class="btn btn-danger">Hapus</button>
-                            </div>
+                            <p style="color: red;">RPS berhasil ditampilkan</p>
                         </div>
                     </div>
 
                 </div>
             </div>
         </div>
-
     </div>
-</div>
-
-
-
-@section('script')
-{{-- delete js --}}
-<script>
-    $(document).on('click', '.teacher_delete', function() {
-        var _this = $(this).parents('tr');
-        $('.e_id').val(_this.find('.id').text());
-    });
-</script>
-@endsection
-
-@endsection
+    @endsection
