@@ -7,6 +7,12 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 use App\Models\Prodi;
+use App\Models\Rps;
+use App\Models\Jurusan;
+use App\Models\Studi;
+use App\Models\Matkul;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class StudentController extends Controller
 {
@@ -27,58 +33,45 @@ class StudentController extends Controller
     /** student add page */
     public function studentAdd()
     {
-        return view('student.add-student');
+        $jurusanListes = Jurusan::all();
+        $prodiListes = Prodi::all();
+        return view('student.add-student', compact('jurusanListes', 'prodiListes'));
     }
 
     /** student save record */
     public function studentSave(Request $request)
     {
+
         $request->validate([
-            'first_name'    => 'required|string',
-            'last_name'     => 'required|string',
-            'gender'        => 'required|not_in:0',
-            'date_of_birth' => 'required|string',
-            'roll'          => 'required|string',
-            'blood_group'   => 'required|string',
-            'religion'      => 'required|string',
-            'email'         => 'required|email',
-            'class'         => 'required|string',
-            'section'       => 'required|string',
-            'admission_id'  => 'required|string',
-            'phone_number'  => 'required',
-            'upload'        => 'required|image',
+            'Jurusan' => 'required',
+            'Prodi' => 'required',
         ]);
 
         DB::beginTransaction();
         try {
+            $matkul = new Matkul;
+            $matkul->matkul = $request['Matkul'];
+            $matkul->kode_mk = $request['Kode_MK'];
+            $matkul->semester = $request['Semester'];
+            $matkul->prodi_id = $request['Prodi'];
+            $matkul->sks = $request['SKS'];
+            $matkul->save();
 
-            $upload_file = rand() . '.' . $request->upload->extension();
-            $request->upload->move(storage_path('app/public/student-photos/'), $upload_file);
-            if (!empty($request->upload)) {
-                $student = new Student;
-                $student->first_name   = $request->first_name;
-                $student->last_name    = $request->last_name;
-                $student->gender       = $request->gender;
-                $student->date_of_birth = $request->date_of_birth;
-                $student->roll         = $request->roll;
-                $student->blood_group  = $request->blood_group;
-                $student->religion     = $request->religion;
-                $student->email        = $request->email;
-                $student->class        = $request->class;
-                $student->section      = $request->section;
-                $student->admission_id = $request->admission_id;
-                $student->phone_number = $request->phone_number;
-                $student->upload = $upload_file;
-                $student->save();
+            $studi = new Studi;
+            $studi->jurusan_id   = $request->Jurusan;
+            $studi->prodi_id = $request->Prodi;
+            $studi->matkul_id = $matkul->id;
+            $studi->semester = $request->Semester;
+            $studi->status = 0;
+            $studi->save();
 
-                Toastr::success('Has been add successfully :)', 'Success');
-                DB::commit();
-            }
+            Toastr::success('Has been add successfully :)', 'Success');
+            DB::commit();
 
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
-            Toastr::error('fail, Add new student  :)', 'Error');
+            Toastr::error('fail, Add new studi  :)', 'Error');
             return redirect()->back();
         }
     }
@@ -120,23 +113,34 @@ class StudentController extends Controller
     }
 
     /** student delete */
-    public function studentDelete(Request $request)
+    public function studentDelete()
     {
-        DB::beginTransaction();
-        try {
-
-            if (!empty($request->id)) {
-                Student::destroy($request->id);
-                unlink(storage_path('app/public/student-photos/' . $request->avatar));
-                DB::commit();
-                Toastr::success('Student deleted successfully :)', 'Success');
-                return redirect()->back();
+        $studiListes = Studi::all();
+        $accordionData = [];
+        foreach ($studiListes as $studi) {
+            $key = $studi->prodi_id . '_' . $studi->semester;
+    
+            if (!isset($accordionData[$key])) {
+                $accordionData[$key] = [];
             }
-        } catch (\Exception $e) {
-            DB::rollback();
-            Toastr::error('Student deleted fail :)', 'Error');
-            return redirect()->back();
+    
+            $accordionData[$key][] = [
+                'matkul_id' => $studi->matkul_id,
+                'status' => $studi->status,
+                'id' => $studi->id,
+            ];
         }
+        
+        return view('student.delete-student', compact('studiListes', 'accordionData'));
+    }
+
+    public function destroy($id)
+    {
+        $deletedStudi = Studi::findOrFail($id);
+        $deletedStudi->delete();
+
+        Toastr::success('Data prodi berhasil dihapus', 'Sukses');
+        return redirect()->back();
     }
 
     /** student profile page */
@@ -149,12 +153,57 @@ class StudentController extends Controller
     /** student reporting */
     public function ReportingStudent()
     {
-        return view('student.student-reporting', ['prodi' => Prodi::all()]);
+        $prodi = Prodi::all();
+        return view('student.student-reporting', compact('prodi'));
     }
 
     /** student monitoring */
     public function MonitoringStudent()
     {
-        return view('student.student-monitoring');
+        $listProdi = Prodi::all();
+        return view('student.student-monitoring', compact('listProdi'));
+    }
+
+    public function DetailReporting(Request $request, $id)
+    {
+        $semester = $request->query('semester');
+
+        // Mengambil data RPS, nama prodi, dan nama jurusan dari tabel studi, prodi, dan jurusan
+        $rps = Studi::join('prodi', 'studi.prodi_id', '=', 'prodi.id')
+            ->join('jurusan', 'prodi.jurusan_id', '=', 'jurusan.id')
+            ->join('matkul', 'studi.matkul_id', '=', 'matkul.id')
+            ->where('studi.prodi_id', $id)
+            ->get(['studi.id', 'studi.semester', 'prodi.prodi', 'jurusan.jurusan', 'matkul.matkul', 'studi.file']);
+
+        return view('student.detail-reporting', [
+            'rps' => $rps,
+            'semester' => $semester
+        ]);
+    }
+
+    public function detailDownload($id)
+    {
+        $downloaded = Studi::find($id);
+        $downloadFileName = $downloaded->file;
+        $filePath = storage_path('app/public/files/' . $downloadFileName);
+
+        return response()->download($filePath);
+    }
+    /** select 2 dropdown testing */
+    public function index()
+    {
+        $jurusans = Jurusan::all();
+        $prodis = Prodi::all();
+        return view('student.index', compact('jurusans', 'prodis'));
+    }
+
+    public function getProdiByJurusan(Request $request)
+    {
+        $jurusanId = $request->input('jurusan_id');
+        $prodis = Prodi::where('jurusan_id', $jurusanId)->get();
+
+        return response()->json([
+            'prodis' => $prodis
+        ]);
     }
 }

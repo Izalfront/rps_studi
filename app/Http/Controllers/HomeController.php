@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Prodi;
 
 class HomeController extends Controller
 {
@@ -48,6 +49,7 @@ class HomeController extends Controller
     /** reporting */
     public function reporting()
     {
-        return view('student.student-reporting');
+        $prodi = Prodi::all();
+        return view('student.student-reporting', compact('prodi'));
     }
 }

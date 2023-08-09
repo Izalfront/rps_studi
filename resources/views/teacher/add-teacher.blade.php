@@ -9,8 +9,8 @@
                 <div class="col">
                     <h3 class="page-title">Filtering program studi</h3>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="teachers.html">Pengajar</a></li>
-                        <li class="breadcrumb-item active">Add Pengajar</li>
+                        <li class="breadcrumb-item"><a href="teachers.html">Filtering</a></li>
+                        <li class="breadcrumb-item active">Pengajar</li>
                     </ul>
                 </div>
             </div>
@@ -28,13 +28,13 @@
                                 <div class="card flex-fill comman-shadow">
 
                                     <div class="card-body">
-
+                                        @foreach($studiTeacher as $studi)
                                         <div class="activity-groups">
                                             <div class="activity-awards">
 
                                                 <div class="award-list-outs">
-                                                    <h4><b>RPS Semester 4 A</b></h4>
-                                                    <h5>Rps Andi M.Kom.pdf</h5>
+                                                    <h4><b>RPS Semester {{$studi->matkul->matkul}}</b></h4>
+                                                    <h5>{{$studi->prodi->prodi}} Semester {{ $studi->semester }}</h5>
                                                 </div>
                                                 <div class="award-time-list">
                                                     <style>
@@ -42,64 +42,10 @@
                                                             margin-right: 40px;
                                                         }
                                                     </style>
-
-                                                    <a href="#">Detail</a>
-                                                    <a href="#">Download</a>
+                                                    <a href="{{route ('teacher/filtering/page',['id'=>$studi->id])}}">Download</a>
                                                 </div>
                                             </div>
-                                            <div class="activity-awards">
-
-                                                <div class="award-list-outs">
-                                                    <h4><b>RPS Semester 4 B</b></h4>
-                                                    <h5>Rps Andi M.Kom.pdf</h5>
-                                                </div>
-                                                <div class="award-time-list">
-                                                    <style>
-                                                        .award-time-list a {
-                                                            margin-right: 40px;
-                                                        }
-                                                    </style>
-
-                                                    <a href="#">Detail</a>
-                                                    <a href="#">Download</a>
-
-                                                </div>
-                                            </div>
-                                            <div class="activity-awards">
-
-                                                <div class="award-list-outs">
-                                                    <h4><b>RPS Semester 4 C</b></h4>
-                                                    <h5>Rps Andi M.Kom.pdf</h5>
-                                                </div>
-                                                <div class="award-time-list">
-                                                    <style>
-                                                        .award-time-list a {
-                                                            margin-right: 40px;
-                                                        }
-                                                    </style>
-
-                                                    <a href="#">Detail</a>
-                                                    <a href="#">Download</a>
-                                                </div>
-                                            </div>
-                                            <div class="activity-awards mb-0">
-
-                                                <div class="award-list-outs">
-                                                    <h4><b>RPS Semester 4 D</b></h4>
-                                                    <h5>Rps Andi M.Kom.pdf</h5>
-                                                </div>
-                                                <div class="award-time-list">
-                                                    <style>
-                                                        .award-time-list a {
-                                                            margin-right: 40px;
-                                                        }
-                                                    </style>
-
-                                                    <a href="#">Detail</a>
-                                                    <a href="#">Download</a>
-                                                </div>
-                                            </div>
-
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>

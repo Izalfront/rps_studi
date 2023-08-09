@@ -19,11 +19,10 @@
                 </div>
                 <div class="card-body">
                     <div class="activity-groups">
+                        @foreach($prodiListes as $prodi)
                         <div class="activity-awards">
-
                             <div class="award-list-outs">
-                                <h4><a href="#"><b> RPS Semester 4 </b></a></h4>
-                                <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
+                                <h4><a href="#"><b>RPS Prodi {{$prodi->prodi}}</b></a></h4>
                             </div>
                             <div class="award-time-list">
                                 <style>
@@ -36,57 +35,16 @@
                                     }
                                 </style>
                                 <div class="teks">
-                                    <p style="color: green;">4 berhasil ditampilkan</p><br />
-                                    <p style="color: red;">3 RPS tidak ditampilkan</p>
+                                    <p style="color: green;">
+                                        {{ \App\Models\Studi::where('prodi_id', $prodi->id)->where('status', 2)->count() }} berhasil ditampilkan
+                                    </p><br />
+                                    <p style="color: red;">
+                                        {{ \App\Models\Studi::where('prodi_id', $prodi->id)->where('status', 3)->count() }} tidak ditampilkan
+                                    </p>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="activity-awards">
-
-                            <div class="award-list-outs">
-                                <h4><a href="#"><b> RPS Semester 3 </b></a></h4>
-                                <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
-                            </div>
-                            <div class="award-time-list">
-                                <style>
-                                    .award-time-list a {
-                                        margin-right: 40px;
-                                    }
-
-                                    .teks {
-                                        padding-top: 50px;
-                                    }
-                                </style>
-                                <div class="teks">
-                                    <p style="color: green;">4 berhasil ditampilkan</p><br />
-                                    <p style="color: red;">3 RPS tidak ditampilkan</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="activity-awards">
-
-                            <div class="award-list-outs">
-                                <h4><a href="#"><b> RPS Semester 2 </b></a></h4>
-                                <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
-                            </div>
-                            <div class="award-time-list">
-                                <style>
-                                    .award-time-list a {
-                                        margin-right: 40px;
-                                    }
-
-                                    .teks {
-                                        padding-top: 50px;
-                                    }
-                                </style>
-                                <div class="teks">
-                                    <p style="color: green;">4 berhasil ditampilkan</p><br />
-                                    <p style="color: red;">3 RPS tidak ditampilkan</p>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
 

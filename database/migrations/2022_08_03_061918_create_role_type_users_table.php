@@ -21,7 +21,7 @@ class CreateRoleTypeUsersTable extends Migration
 
         DB::table('role_type_users')->insert([
             ['role_type' => 'Admin'],
-            ['role_type' => 'Super Admin'],
+            ['role_type' => 'Admin'],
             ['role_type' => 'Normal User'],
             ['role_type' => 'Teachers'],
             ['role_type' => 'Student']

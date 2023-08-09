@@ -32,7 +32,6 @@
                         <table class="table star-student table-hover table-center table-borderless table-striped">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>ID Jurusan Elektro</th>
                                     <th class="text-center">Prodi</th>
                                     <th class="text-center">RPS Selesai</th>
                                     <th class="text-center">RPS Belum Selesai</th>
@@ -40,47 +39,13 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($listProdi as $prodi)
                                 <tr>
-                                    <td class="text-nowrap">
-                                        <div>12345678</div>
-                                    <td class="text-center">D3 Teknik Informatika</td>
-                                    <td class="text-center">3</td>
-                                    <td class="text-center">3</td>
+                                    <td class="text-center">{{$prodi->prodi}}</td>
+                                    <td class="text-center">{{ \App\Models\Studi::where('prodi_id', $prodi->id)->where('status', 2)->count() }}</td>
+                                    <td class="text-center">{{ \App\Models\Studi::where('prodi_id', $prodi->id)->where('status', 3)->count() }}</td>
                                 </tr>
-                                <tr>
-                                    <td class="text-nowrap">
-                                        <div>12345678</div>
-                                    </td>
-                                    <td class="text-center">D4 SIKC</td>
-                                    <td class="text-center">4</td>
-                                    <td class="text-center">4</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-nowrap">
-                                        <div>12345678</div>
-                                    </td>
-                                    <td class="text-center">D3 Teknik Elektronika</td>
-                                    <td class="text-center">3</td>
-                                    <td class="text-center">3</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-nowrap">
-                                        <div>12345678</div>
-                                    </td>
-                                    </td>
-                                    <td class="text-center">D3 Teknik Listrik</td>
-                                    <td class="text-center">3</td>
-                                    <td class="text-center">3</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-nowrap">
-                                        <div>12345678</div>
-                                    </td>
-                                    <td class="text-center">D4 TRPE</td>
-                                    <td class="text-center">4</td>
-                                    <td class="text-center">4</td>
-                                </tr>
-
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

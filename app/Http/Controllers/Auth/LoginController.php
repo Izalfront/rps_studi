@@ -85,7 +85,15 @@ class LoginController extends Controller
                 Session::put('position', $user->position);
                 Session::put('department', $user->department);
                 Toastr::success('Login successfully :)', 'Success');
-                return redirect()->intended('student/reporting/page');
+                if ($user->role_name === 'admin') {
+                    return redirect()->intended('student/reporting/page');
+                } elseif ($user->role_name === 'pengajar') {
+                    return redirect('teacher/list/page');
+                } elseif ($user->role_name === 'kaprodi') {
+                    return redirect('kaprodi/dashboard/page');
+                } else {
+                    return redirect('department/add/page');
+                }
             } else {
                 Toastr::error('fail, WRONG USERNAME OR PASSWORD :)', 'Error');
                 return redirect('login');

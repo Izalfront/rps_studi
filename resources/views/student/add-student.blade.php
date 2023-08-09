@@ -36,11 +36,12 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="form-group local-forms">
                                         <label>Jurusan <span class="login-danger">*</span></label>
-                                        <select class="form-control select  @error('gender') is-invalid @enderror" name="gender">
+                                        <select class="form-control" name="Jurusan">
                                             <option selected disabled>Pilih Jurusan</option>
-                                            <option value="#">Elektro</option>
-                                            <option value="#">Administrasi Bisnis</option>
-                                            <option value="#">Mesin</option>
+                                            @foreach($jurusanListes as $jurusan)
+                                            <option value="{{ $jurusan->id }}">{{ $jurusan->jurusan }}</option>
+                                            @endforeach
+
                                         </select>
 
                                     </div>
@@ -49,11 +50,12 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="form-group local-forms">
                                         <label>Prodi <span class="login-danger">*</span></label>
-                                        <select class="form-control select @error('blood_group') is-invalid @enderror" name="blood_group">
-                                            <option selected disabled>Pilih Prodi </option>
-                                            <option value="#">Teknik Informatika</option>
-                                            <option value="#">Teknik Elektronika</option>
-                                            <option value="#">Teknik Listrik</option>
+                                        <select class="form-control " name="Prodi">
+                                            <option selected disabled value="">Pilih Prodi </option>
+                                            @foreach($prodiListes as $jurusan)
+                                            <option value="{{ $jurusan->id }}">{{ $jurusan->prodi }}</option>
+                                            @endforeach
+
                                         </select>
 
                                     </div>
@@ -61,23 +63,43 @@
 
                                 <div class="col-12 col-sm-4">
                                     <div class="form-group local-forms">
-                                        <label>Mata Kuliah</label>
-                                        <input class="form-control @error('admission_id') is-invalid @enderror" type="text" name="admission_id" placeholder="Isi Mata Kuliah" value="{{ old('admission_id') }}">
+                                        <label>Semester </label>
+                                        <input class="form-control" type="number" min="1" max="8" name="Semester" placeholder="Isi Semester">
 
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-4">
                                     <div class="form-group local-forms">
-                                        <label>Semester </label>
-                                        <input class="form-control" type="text" name="phone_number" placeholder="Isi Semester" value="{{ old('phone_number') }}">
+                                        <label>Nama MataKuliah </label>
+                                        <input class="form-control" type="text" name="Matkul" placeholder="Isi Nama Matkul">
 
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
+                                    <div class="form-group local-forms">
+                                        <label>Nama Pengajar </label>
+                                        <input class="form-control" type="text" name="Dosen" placeholder="Isi Nama Pengajar">
+
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
+                                    <div class="form-group local-forms">
+                                        <label>Kode Matkul </label>
+                                        <input class="form-control" type="text" name="Kode_MK" placeholder="Isi kode matkul">
+
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
+                                    <div class="form-group local-forms">
+                                        <label>Deskripsi Matkul </label>
+                                        <input class="form-control" type="number" name="SKS" placeholder="Isi SKS">
 
                                     </div>
                                 </div>
 
                                 <div class="col-12">
                                     <div class="student-submit">
-                                        <a href="{{ route('student.add')}}" class="btn btn-primary">Tambah data</a>
+                                        <input type="submit" class="btn btn-primary" value="Tambah Data">
                                     </div>
                                 </div>
                             </div>
@@ -88,4 +110,5 @@
         </div>
     </div>
 </div>
+
 @endsection

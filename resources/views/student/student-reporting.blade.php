@@ -29,7 +29,6 @@
             <div class="card-body">
 
                 <div class="activity-groups">
-
                     @foreach ($prodi as $program_studi)
                     <div class="activity-awards">
                         <div class="award-boxs">
@@ -40,7 +39,7 @@
                             <h5>Semester 1 - 6</h5>
                         </div>
                         <div class="award-time-list">
-                            <a href="/reporting">Lihat Detail</a>
+                            <a href="{{route('student/reporting/detail',['id'=>$program_studi->id])}}">Lihat Detail</a>
                         </div>
                     </div>
                     @endforeach

@@ -9,23 +9,52 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Teacher;
 use Brian2694\Toastr\Facades\Toastr;
+use App\Models\Prodi;
+use App\Models\Rps;
+use App\Models\Jurusan;
+use App\Models\Studi;
+use Illuminate\Support\Facades\Storage;
 
 class TeacherController extends Controller
 {
     /** add teacher page */
     public function teacherAdd()
     {
-        return view('teacher.add-teacher');
+        $studiTeacher = Studi::where('status', 2)->get();
+        return view('teacher.add-teacher', compact('studiTeacher'));
+    }
+
+    /** filtering teacher page */
+    public function teacherFiltering($id)
+    {
+        $studiFiltering = Studi::find($id);
+        $studiFileName = $studiFiltering->file;
+        $filePath = storage_path('app/public/files/' . $studiFileName);
+
+
+        return response()->download($filePath);
     }
 
     /** teacher list */
     public function teacherList()
     {
-        $listTeacher = DB::table('users')
-            ->join('teachers','teachers.teacher_id','users.user_id')
-            ->select('users.user_id','users.name','users.avatar','teachers.id','teachers.gender','teachers.mobile','teachers.address')
-            ->get();
-        return view('teacher.list-teachers',compact('listTeacher'));
+        $studiListes = Studi::all();
+        $accordionData = [];
+        foreach ($studiListes as $studi) {
+            $key = $studi->prodi_id . '_' . $studi->semester;
+    
+            if (!isset($accordionData[$key])) {
+                $accordionData[$key] = [];
+            }
+    
+            $accordionData[$key][] = [
+                'matkul_id' => $studi->matkul_id,
+                'status' => $studi->status,
+                'id' => $studi->id,
+            ];
+        }
+
+        return view('teacher.list-teachers', compact('studiListes', 'accordionData'));
     }
 
     /** save record */
@@ -51,11 +80,11 @@ class TeacherController extends Controller
         ]);
 
         try {
-        
+
             $dt        = Carbon::now();
             $todayDate = $dt->toDayDateTimeString();
-            
-                 
+
+
             User::create([
                 'name'      => $request->full_name,
                 'email'     => $request->email,
@@ -63,8 +92,8 @@ class TeacherController extends Controller
                 'role_name' => 'Teacher',
                 'password'  => Hash::make($request->password),
             ]);
-            $user_id = DB::table('users')->select('user_id')->orderBy('id','DESC')->first();
-            
+            $user_id = DB::table('users')->select('user_id')->orderBy('id', 'DESC')->first();
+
             $saveRecord = new Teacher;
             $saveRecord->teacher_id    = $user_id->user_id;
             $saveRecord->full_name     = $request->full_name;
@@ -81,13 +110,13 @@ class TeacherController extends Controller
             $saveRecord->zip_code      = $request->zip_code;
             $saveRecord->country       = $request->country;
             $saveRecord->save();
-   
-            Toastr::success('Has been add successfully :)','Success');
+
+            Toastr::success('Has been add successfully :)', 'Success');
             return redirect()->back();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             \Log::info($e);
             DB::rollback();
-            Toastr::error('fail, Add new record  :)','Error');
+            Toastr::error('fail, Add new record  :)', 'Error');
             return redirect()->back();
         }
     }
@@ -95,8 +124,8 @@ class TeacherController extends Controller
     /** edit record */
     public function editRecord($id)
     {
-        $teacher = Teacher::where('id',$id)->first();
-        return view('teacher.edit-teacher',compact('teacher'));
+        $teacher = Teacher::where('id', $id)->first();
+        return view('teacher.edit-teacher', compact('teacher'));
     }
 
     /** update record teacher */
@@ -120,33 +149,72 @@ class TeacherController extends Controller
                 'zip_code'      => $request->zip_code,
                 'country'      => $request->country,
             ];
-            Teacher::where('id',$request->id)->update($updateRecord);
-            
-            Toastr::success('Has been update successfully :)','Success');
+            Teacher::where('id', $request->id)->update($updateRecord);
+
+            Toastr::success('Has been update successfully :)', 'Success');
             DB::commit();
             return redirect()->back();
-           
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            Toastr::error('fail, update record  :)','Error');
+            Toastr::error('fail, update record  :)', 'Error');
             return redirect()->back();
         }
     }
 
     /** delete record */
-    public function teacherDelete(Request $request)
+    public function destroy($id)
     {
-        DB::beginTransaction();
-        try {
+        $deletedStudi = Studi::findOrFail($id);
+        $deletedStudi->delete();
 
-            Teacher::destroy($request->id);
-            DB::commit();
-            Toastr::success('Deleted record successfully :)','Success');
-            return redirect()->back();
-        } catch(\Exception $e) {
-            DB::rollback();
-            Toastr::error('Deleted record fail :)','Error');
-            return redirect()->back();
+        Toastr::success('Data prodi berhasil dihapus', 'Sukses');
+        return redirect()->back();
+    }
+
+    /** upload record */
+    public function teacherUpload()
+    {
+        return view('teacher.upload-teacher', ['studi' => Studi::all()]);
+    }
+
+
+    public function teacherFile(Request $request, $id)
+    {
+        $file = $request->file('file');
+
+        if ($file) {
+            $studi = Studi::find($id);
+
+            if ($studi) {
+                $fileName = $file->getClientOriginalName();
+                $file->storeAs('public/files', $fileName);
+
+                $studi->file = $fileName;
+                $studi->status = 1;
+                $studi->save();
+                Toastr::success('File RPS berhasil diupload', 'Sukses');
+            }
         }
+        return redirect()->back();
+    }
+
+    public function teacherReset($id)
+    {
+        $resetedStudi = Studi::findOrFail($id);
+        $resetedStudi->status = 0;
+        $resetedStudi->file = null;
+        $resetedStudi->save();
+
+        Toastr::success('Data prodi berhasil dihapus', 'Sukses');
+        return redirect()->back();
+    }
+
+    public function teacherPesan()
+    {
+        $pesanList = Studi::where('status', 3)
+        ->where('pesan', '!=', null)
+        ->get();
+
+        return view('teacher.pesan-teacher', compact('pesanList'));
     }
 }

@@ -24,15 +24,15 @@
                 </ul>
             </div>
             <div class="card-body">
-
+                @foreach($PenyetujuanKaprodi as $kaprodi)
                 <div class="activity-groups">
                     <div class="activity-awards">
                         <div class="award-boxs">
                             <img src="award-icon-02.svg" alt="">
                         </div>
                         <div class="award-list-outs">
-                            <h4><a href="#"><b> RPS Semester 4 </b></a></h4>
-                            <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
+                            <h4><a href="#"><b>RPS {{$kaprodi->matkul->matkul}}</b></a></h4>
+                            <h5>Jurusan {{$kaprodi->jurusan->jurusan}} Prodi {{$kaprodi->prodi->prodi}} Semester {{ $kaprodi->semester }}</h5>
                         </div>
                         <div class="award-time-list">
                             <style>
@@ -41,65 +41,17 @@
                                 }
                             </style>
 
+                            @if ($kaprodi->status == 2)
                             <p style="color: green;">RPS berhasil ditampilkan</p>
+                            @else
+                            <p style="color: red;">RPS tidak berhasil ditampilkan</p>
+                            @endif
                         </div>
                     </div>
-                    <div class="activity-awards">
-                        <div class="award-boxs">
-                            <img src="award-icon-02.svg" alt="">
-                        </div>
-                        <div class="award-list-outs">
-                            <h4><a href="#"><b>RPS Semester 2 </b></a></h4>
-                            <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
-                        </div>
-                        <div class="award-time-list">
-                            <style>
-                                .award-time-list a {
-                                    margin-right: 40px;
-                                }
-                            </style>
-
-                            <p style="color: green;">RPS berhasil ditampilkan</p>
-                        </div>
-                    </div>
-                    <div class="activity-awards">
-                        <div class="award-boxs">
-                            <img src="award-icon-02.svg" alt="">
-                        </div>
-                        <div class="award-list-outs">
-                            <h4><a href="#"><b>RPS Semester 1 </b></a></h4>
-                            <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
-                        </div>
-                        <div class="award-time-list">
-                            <style>
-                                .award-time-list a {
-                                    margin-right: 40px;
-                                }
-                            </style>
-
-                            <p style="color: red;">RPS berhasil ditampilkan</p>
-                        </div>
-                    </div>
-                    <div class="activity-awards mb-0">
-                        <div class="award-boxs">
-                            <img src="award-icon-02.svg" alt="">
-                        </div>
-                        <div class="award-list-outs">
-                            <h4><a href="#"><b>RPS Semester 5</b></a></h4>
-                            <h5>Jurusan Elektro Prodi Teknik Informatika</h5>
-                        </div>
-                        <div class="award-time-list">
-                            <style>
-                                .award-time-list a {
-                                    margin-right: 40px;
-                                }
-                            </style>
-                            <p style="color: red;">RPS berhasil ditampilkan</p>
-                        </div>
-                    </div>
-
                 </div>
+                @endforeach
             </div>
+
         </div>
     </div>
     @endsection
